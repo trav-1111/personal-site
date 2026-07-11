@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Travis Keir — Systems Builder</title>
+<meta name="description" content="Travis Keir builds systems. Fifteen years in live AV, now building AI-powered operations tools for businesses in Southeast Queensland.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#121417;
+    --slate:#1E2328;
+    --dusty:#6B7F9E;
+    --sky:#9FB1CC;
+    --paper:#E9E4DA;
+    --slate-line:#2c333b;
+    --paper-dim:rgba(233,228,218,0.62);
+    --paper-faint:rgba(233,228,218,0.40);
+    --display:'Space Grotesk',sans-serif;
+    --mono:'IBM Plex Mono',monospace;
+    --body:'Inter',system-ui,sans-serif;
+    --maxw:1080px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--ink);
+    color:var(--paper);
+    font-family:var(--body);
+    font-size:17px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none}
+  ::selection{background:var(--dusty);color:var(--ink)}
+
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+
+  /* ---- eyebrow / mono labels ---- */
+  .mono{font-family:var(--mono);font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--sky)}
+
+  /* ---------------- NAV ---------------- */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:50;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 28px;
+    background:linear-gradient(to bottom,rgba(18,20,23,0.92),rgba(18,20,23,0));
+    backdrop-filter:blur(2px);
+  }
+  nav .tk-mark .tk-glyph{width:32px;height:32px;border-radius:8px;font-size:13px}
+  nav .tk-mark .tk-word{font-size:12px;letter-spacing:0.18em}
+  nav .tk-mark{transition:opacity .2s}
+  nav .tk-mark:hover{opacity:0.8}
+  nav .links{display:flex;gap:26px;font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-transform:uppercase}
+  nav .links a{color:var(--paper-dim);transition:color .2s}
+  nav .links a:hover{color:var(--sky)}
+  @media(max-width:640px){nav .links{display:none}}
+
+  /* ---------------- LOGO MARK ---------------- */
+  .tk-mark{display:inline-flex;align-items:center;gap:12px}
+  .tk-glyph{
+    width:38px;height:38px;border:1.5px solid var(--sky);border-radius:9px;
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--display);font-weight:600;font-size:15px;letter-spacing:0.04em;
+    color:var(--paper);flex-shrink:0;
+  }
+  .tk-word{font-family:var(--mono);font-size:13px;letter-spacing:0.22em;text-transform:uppercase;color:var(--paper)}
+
+  /* ---------------- HERO ---------------- */
+  header{
+    min-height:100vh;display:flex;flex-direction:column;justify-content:center;
+    padding:120px 0 60px;position:relative;overflow:hidden;
+  }
+  /* smooth dusty-blue -> ink gradient with subtle grain */
+  .hero-bg{
+    position:absolute;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(120% 90% at 78% 8%, rgba(107,127,158,0.55) 0%, rgba(107,127,158,0.18) 34%, rgba(18,20,23,0) 66%),
+      linear-gradient(158deg, #23303f 0%, #1a2129 42%, var(--ink) 100%);
+  }
+  .hero-bg::after{
+    content:"";position:absolute;inset:0;opacity:0.07;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  header .wrap{position:relative;z-index:1}
+  .hero-eyebrow{margin-bottom:26px}
+  h1{
+    font-family:var(--display);
+    font-weight:600;
+    font-size:clamp(2.6rem,7vw,5.4rem);
+    line-height:1.02;
+    letter-spacing:-0.02em;
+    max-width:14ch;
+  }
+  h1 .accent{color:var(--sky)}
+  .hero-sub{
+    margin-top:30px;max-width:52ch;font-size:clamp(1.05rem,2vw,1.3rem);
+    color:var(--paper-dim);line-height:1.55;
+  }
+
+  /* ---- signal chain signature ---- */
+  .chain{margin-top:56px;width:100%;overflow:visible}
+  .chain-track{
+    display:flex;align-items:stretch;gap:0;flex-wrap:wrap;
+    border:1px solid var(--slate-line);border-radius:4px;
+    background:linear-gradient(180deg,rgba(30,35,40,0.55),rgba(18,20,23,0.2));
+  }
+  .node{
+    flex:1 1 0;min-width:200px;position:relative;
+    padding:24px 26px;
+    border-right:1px solid var(--slate-line);
+  }
+  .node:last-child{border-right:none}
+  .node .idx{font-family:var(--mono);font-size:11px;color:var(--dusty);letter-spacing:0.1em}
+  .node .stage{font-family:var(--display);font-weight:600;font-size:1.25rem;margin-top:8px;color:var(--paper)}
+  .node .desc{font-family:var(--mono);font-size:11.5px;line-height:1.5;color:var(--paper-faint);margin-top:8px;letter-spacing:0.02em}
+  .node .dot{
+    position:absolute;right:-5px;top:50%;transform:translateY(-50%);
+    width:9px;height:9px;border-radius:50%;background:var(--dusty);z-index:2;
+    box-shadow:0 0 0 4px var(--ink);
+  }
+  .node:last-child .dot{background:var(--sky)}
+  /* travelling signal pulse */
+  .node:last-child .dot::after{
+    content:"";position:absolute;inset:0;border-radius:50%;background:var(--sky);
+    animation:pulse 2.6s ease-out infinite;
+  }
+  @keyframes pulse{
+    0%{transform:scale(1);opacity:.9}
+    70%{transform:scale(3.4);opacity:0}
+    100%{opacity:0}
+  }
+  @media(max-width:640px){
+    .node{border-right:none;border-bottom:1px solid var(--slate-line)}
+    .node:last-child{border-bottom:none}
+    .node .dot{display:none}
+  }
+
+  /* ---------------- SECTIONS ---------------- */
+  section{padding:100px 0;border-top:1px solid var(--slate-line)}
+  .sec-head{display:flex;align-items:baseline;gap:18px;margin-bottom:48px}
+  .sec-head .num{font-family:var(--mono);font-size:12px;color:var(--dusty)}
+  .sec-head h2{font-family:var(--display);font-weight:600;font-size:clamp(1.6rem,3.5vw,2.4rem);letter-spacing:-0.01em}
+
+  /* about */
+  .about-body{max-width:60ch;font-size:1.15rem;line-height:1.7;color:var(--paper)}
+  .about-body p+p{margin-top:22px}
+  .about-body .lead{color:var(--sky);font-family:var(--display);font-weight:500;font-size:1.35rem;line-height:1.4}
+
+  /* work grid */
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+  @media(max-width:760px){.grid{grid-template-columns:1fr}}
+  .card{
+    background:var(--slate);border:1px solid var(--slate-line);border-radius:6px;
+    padding:30px;display:flex;flex-direction:column;min-height:210px;
+    transition:border-color .25s,transform .25s;position:relative;overflow:hidden;
+  }
+  .card::before{
+    content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--dusty);
+    transform:scaleY(0);transform-origin:top;transition:transform .3s;
+  }
+  .card:hover{border-color:var(--dusty);transform:translateY(-3px)}
+  .card:hover::before{transform:scaleY(1)}
+  .card .tag{font-family:var(--mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--dusty)}
+  .card h3{font-family:var(--display);font-weight:600;font-size:1.4rem;margin-top:14px;color:var(--paper)}
+  .card p{margin-top:12px;font-size:0.98rem;color:var(--paper-dim);line-height:1.55;flex:1}
+  .card .go{margin-top:18px;font-family:var(--mono);font-size:12px;letter-spacing:0.06em;color:var(--sky);display:inline-flex;align-items:center;gap:8px}
+  .card .go .arrow{transition:transform .25s}
+  .card:hover .go .arrow{transform:translateX(5px)}
+  .card.disabled .go{color:var(--paper-faint)}
+
+  /* capabilities strip */
+  .caps{display:flex;flex-wrap:wrap;gap:10px}
+  .cap{
+    font-family:var(--mono);font-size:12px;letter-spacing:0.04em;
+    padding:8px 14px;border:1px solid var(--slate-line);border-radius:100px;
+    color:var(--paper-dim);
+  }
+
+  /* contact */
+  .contact-inner{display:flex;flex-direction:column;gap:28px;max-width:60ch}
+  .contact-inner .big{font-family:var(--display);font-weight:600;font-size:clamp(1.8rem,4vw,2.8rem);line-height:1.1;letter-spacing:-0.01em}
+  .contact-inner .big a{color:var(--sky);border-bottom:2px solid transparent;transition:border-color .2s}
+  .contact-inner .big a:hover{border-color:var(--sky)}
+  .socials{display:flex;gap:22px;font-family:var(--mono);font-size:13px;letter-spacing:0.05em}
+  .socials a{color:var(--paper-dim);transition:color .2s}
+  .socials a:hover{color:var(--sky)}
+
+  footer{padding:40px 0 60px;border-top:1px solid var(--slate-line)}
+  footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  footer .mono{color:var(--paper-faint)}
+
+  /* reveal on scroll */
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+  .reveal.in{opacity:1;transform:none}
+  @media(prefers-reduced-motion:reduce){
+    .reveal{opacity:1;transform:none;transition:none}
+    .node:last-child .dot::after{animation:none}
+    html{scroll-behavior:auto}
+  }
+  :focus-visible{outline:2px solid var(--sky);outline-offset:3px;border-radius:2px}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="tk-mark" aria-label="Travis Keir — home">
+    <span class="tk-glyph">TK</span>
+    <span class="tk-word">Travis Keir</span>
+  </a>
+  <div class="links">
+    <a href="#work">Work</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<header>
+  <div class="hero-bg" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="hero-eyebrow mono">Systems builder · Southeast QLD</div>
+    <h1>I make complex systems <span class="accent">work for real people.</span></h1>
+    <p class="hero-sub">Fifteen years running live sound and AV taught me one thing well: take messy, disconnected technology and make it do exactly what someone needs, on time and under pressure. Now I do the same with AI, cloud tooling, and code.</p>
+
+    <div class="chain" aria-label="Career signal chain">
+      <div class="chain-track">
+        <div class="node">
+          <div class="idx">IN</div>
+          <div class="stage">Live Sound &amp; AV</div>
+          <div class="desc">15 yrs · consoles, networks,<br>show control, integration</div>
+          <span class="dot"></span>
+        </div>
+        <div class="node">
+          <div class="idx">PROCESS</div>
+          <div class="stage">Systems &amp; IT</div>
+          <div class="desc">networking, cloud, automation,<br>graduate cert · CompTIA</div>
+          <span class="dot"></span>
+        </div>
+        <div class="node">
+          <div class="idx">OUT</div>
+          <div class="stage">AI &amp; Product</div>
+          <div class="desc">AI ops for SMBs · Vernl<br>full-stack builds · Momints</div>
+          <span class="dot"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="about">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="num">01</span>
+      <h2>The through-line</h2>
+    </div>
+    <div class="about-body reveal">
+      <p class="lead">A sound engineer is a systems integrator with a deadline of "doors open at seven."</p>
+      <p>I spent fifteen years in live production — mixing, patching Dante networks, programming lighting rigs, keeping complicated gear talking to itself while a room full of people waited. Somewhere in there I realised the actual skill was never "audio." It was making unfamiliar systems behave, translating the technical into plain language, and staying calm when everything was on fire.</p>
+      <p>These days I point that same skill at AI and software. I build practical, AI-powered systems for small businesses around Southeast Queensland through my consultancy, <strong>Vernl</strong> — and I ship my own products, most recently <strong>Momints</strong>, a camera app on Solana Mobile. Same job. Different gear.</p>
+    </div>
+    <div style="margin-top:44px" class="reveal">
+      <div class="mono" style="margin-bottom:16px">Things I work with</div>
+      <div class="caps">
+        <span class="cap">AI workflows &amp; automation</span>
+        <span class="cap">Systems integration</span>
+        <span class="cap">Networking</span>
+        <span class="cap">Cloud &amp; hosting</span>
+        <span class="cap">Full-stack builds</span>
+        <span class="cap">Home &amp; venue automation</span>
+        <span class="cap">Live AV &amp; show control</span>
+        <span class="cap">3D design &amp; fabrication</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="work">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="num">02</span>
+      <h2>Things I've built</h2>
+    </div>
+    <div class="grid">
+      <a class="card reveal" href="#" data-link="vernl">
+        <span class="tag">Consultancy</span>
+        <h3>Vernl</h3>
+        <p>AI-powered operations systems for event, venue, and trade businesses in SEQ — quoting, scheduling, follow-ups, the admin that eats your evenings. Built by someone who's been on your side of the desk.</p>
+        <span class="go">Visit Vernl <span class="arrow">→</span></span>
+      </a>
+      <a class="card reveal" href="#" data-link="momints">
+        <span class="tag">Product · Web3</span>
+        <h3>Momints</h3>
+        <p>A lomo-style camera app for Solana Mobile. Shoot first, own it forever — photos mint straight to chain. A full-stack build: gasless payments, permanent storage, automated treasury, app-store shipped.</p>
+        <span class="go">See Momints <span class="arrow">→</span></span>
+      </a>
+      <a class="card reveal" href="#" data-link="lab">
+        <span class="tag">Build logs · Lab</span>
+        <h3>Field notes</h3>
+        <p>Write-ups of real builds — a self-hosted smart-home rebuild, a two-keeper crypto treasury, a pool controller integration, a 3D-printed transmitter dock. How the systems actually got made.</p>
+        <span class="go">Read the logs <span class="arrow">→</span></span>
+      </a>
+      <div class="card disabled reveal">
+        <span class="tag">Background</span>
+        <h3>Live AV &amp; production</h3>
+        <p>Fifteen years across festivals, venues, and installs — including directing AV infrastructure for a major venue renovation. The foundation everything else is built on.</p>
+        <span class="go">On request</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="num">03</span>
+      <h2>Get in touch</h2>
+    </div>
+    <div class="contact-inner reveal">
+      <p class="big">Got a system that should work better than it does? <a href="mailto:hello@traviskeir.com">hello@traviskeir.com</a></p>
+      <div class="socials">
+        <a href="#" data-link="linkedin">LinkedIn ↗</a>
+        <a href="#" data-link="vernl">Vernl ↗</a>
+        <a href="#" data-link="dev">traviskeir.dev ↗</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span class="mono">© 2026 Travis Keir</span>
+    <span class="mono">Built &amp; hosted by hand · SEQ, Australia</span>
+  </div>
+</footer>
+
+<script>
+  // scroll reveal
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  },{threshold:0.14});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  // placeholder links — swap the URLs below when the destinations go live
+  const urls = {
+    vernl:    'https://vernl.xyz',
+    momints:  'https://momints.xyz',
+    dev:      'https://traviskeir.dev',
+    lab:      'https://traviskeir.dev',
+    linkedin: 'https://www.linkedin.com/in/travis-keir-204690238/'
+  };
+  document.querySelectorAll('[data-link]').forEach(el=>{
+    const key = el.getAttribute('data-link');
+    if(urls[key]){ el.setAttribute('href', urls[key]); el.setAttribute('rel','noopener'); }
+  });
+</script>
+</body>
+</html>
